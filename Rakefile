@@ -1,10 +1,10 @@
 require "bundler/gem_tasks"
-require "rake/testtask"
 
-Rake::TestTask.new(:test) do |t|
-  t.libs << "test"
-  t.libs << "lib"
-  t.test_files = FileList['test/**/*_test.rb']
+require "rspec/core/rake_task"
+
+task default: [:spec]
+
+desc "Run all rspec files"
+RSpec::Core::RakeTask.new("spec") do |c|
+  c.rspec_opts = "-t ~unresolved"
 end
-
-task :default => :test
