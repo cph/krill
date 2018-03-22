@@ -6,7 +6,7 @@ require "krill/formatter"
 module Krill
 
   def self.wrap_text(runs, width:, leading:)
-    box = Krill::TextBox.new(runs, width: width, leading: leading)
+    box = Krill::TextBox.new(runs, width: width, leading: leading, height: Float::INFINITY)
     box.render
     Krill::WrappedText.new(box)
   end
