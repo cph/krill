@@ -1,8 +1,10 @@
 require "krill/line_wrap"
+require "krill/line"
 require "krill/arranger"
 
 module Krill
   class TextBox
+    attr_reader :printed_lines
 
     def initialize(formatted_text, options={})
       @original_array       = formatted_text
@@ -189,9 +191,8 @@ module Krill
         accumulated_width += fragment_this_line.width
       end
 
-      @printed_lines << printed_fragments.map do |s|
-        s.force_encoding(::Encoding::UTF_8)
-      end.join
+      text = printed_fragments.map { |s| s.force_encoding(::Encoding::UTF_8) }.join
+      @printed_lines << Krill::Line.new(text, accumulated_width)
     end
 
     def word_spacing_for_this_line
