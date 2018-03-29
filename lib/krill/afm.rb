@@ -1,6 +1,6 @@
 module Krill
   AFM = Struct.new(:filename) do
-    attr_reader :name, :family, :ascender, :descender, :line_gap,:character_widths, :kernings
+    attr_reader :name, :family, :ascender, :descender, :line_gap, :character_widths, :kernings
 
     def self.open(filename)
       new filename
