@@ -104,28 +104,25 @@ describe Krill::TextBox do
       expect(text_box.text).to eq("hello\nworld")
     end
 
-    it 'omits spaces from the beginning of the line' do
+    it 'omits spaces from the beginning of the wrapped line' do
+      array = [{ text: "hello  world", font: font }]
+      text_box = described_class.new(array, width: font.width_of("world"))
+      text_box.render
+      expect(text_box.text).to eq("hello\nworld")
+    end
+
+    it 'does not omit spaces from the beginning of paragraphs' do
       array = [{ text: " hello\n world", font: font }]
       text_box = described_class.new(array, width: 612.0)
       text_box.render
-      expect(text_box.text).to eq("hello\nworld")
+      expect(text_box.text).to eq(" hello\n world")
     end
 
     it 'is okay printing a line of whitespace' do
       array = [{ text: "hello\n    \nworld", font: font }]
       text_box = described_class.new(array, width: 612.0)
       text_box.render
-      expect(text_box.text).to eq("hello\n\nworld")
-
-      array = [
-        { text: 'hello' + ' ' * 500, font: font },
-        { text: ' ' * 500, font: font },
-        { text: ' ' * 500 + "\n", font: font },
-        { text: 'world', font: font }
-      ]
-      text_box = described_class.new(array, width: 612.0)
-      text_box.render
-      expect(text_box.text).to eq("hello\n\nworld")
+      expect(text_box.text).to eq("hello\n    \nworld")
     end
 
     it 'enables fragment level direction setting', :unresolved do

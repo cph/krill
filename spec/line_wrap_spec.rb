@@ -39,14 +39,14 @@ describe Krill::LineWrap do
     let(:arranger) { Krill::Arranger.new }
     let(:one_word_width) { 45 }
 
-    it 'strips leading and trailing spaces' do
+    it 'strips trailing spaces' do
       array = [
         { text: ' hello world, ', font: Krill.formatter("Helvetica.afm") },
         { text: 'goodbye  ', font: Krill.formatter("Helvetica-Bold.afm") }
       ]
       arranger.format_array = array
       string = line_wrap.wrap_line(arranger: arranger, width: 300)
-      expect(string).to eq('hello world, goodbye')
+      expect(string).to eq(' hello world, goodbye')
     end
 
     it 'should strip trailing spaces when a white-space-only fragment was' \
@@ -284,9 +284,9 @@ describe Krill::LineWrap do
       expect(line_wrap.space_count).to eq(2)
     end
 
-    it 'excludes preceding and trailing spaces from the count' do
+    it 'excludes trailing spaces from the count' do
       array = [
-        { text: ' hello world, ', font: Krill.formatter("Helvetica.afm") },
+        { text: 'hello world, ', font: Krill.formatter("Helvetica.afm") },
         { text: 'goodbye  ', font: Krill.formatter("Helvetica-Bold.afm") }
       ]
       arranger.format_array = array
