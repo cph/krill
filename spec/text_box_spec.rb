@@ -4,12 +4,11 @@ describe Krill::TextBox do
   let(:font) { Krill.formatter }
 
   describe 'wrapping' do
-    it 'does not wrap between two fragments', :unresolved do
-      pending "Implement superscript and subscript"
+    it 'does not wrap between two fragments' do
       texts = [
-        { text: 'Hello ' },
-        { text: 'World' },
-        { text: '2', styles: [:superscript] }
+        { text: 'Hello ', font: font },
+        { text: 'World', font: font },
+        { text: '2', font: font }
       ]
       text_box = described_class.new(texts, width: font.width_of('Hello World'))
       text_box.render
@@ -27,55 +26,53 @@ describe Krill::TextBox do
       text_box.render
     end
 
-    it 'wraps between two fragments when the preceding fragment ends with a white space', :unresolved do
-      pending "Implement superscript and subscript"
+    it 'wraps between two fragments when the preceding fragment ends with a white space' do
       texts = [
-        { text: 'Hello ' },
-        { text: 'World ' },
-        { text: '2', styles: [:superscript] }
+        { text: 'Hello ', font: font },
+        { text: 'World ', font: font },
+        { text: '2', font: font }
       ]
       text_box = described_class.new(
         texts,
-        width: font.width_of('Hello World')
+        width: font.width_of('Hello World') + 1
       )
       text_box.render
       expect(text_box.text).to eq("Hello World\n2")
 
       texts = [
-        { text: 'Hello ' },
-        { text: "World\n" },
-        { text: '2', styles: [:superscript] }
+        { text: 'Hello ', font: font },
+        { text: "World\n", font: font },
+        { text: '2', font: font }
       ]
       text_box = described_class.new(
         texts,
-        width: font.width_of('Hello World')
+        width: font.width_of('Hello World') + 1
       )
       text_box.render
       expect(text_box.text).to eq("Hello World\n2")
     end
 
-    it 'wraps between two fragments when the final fragment begins with a white space', :unresolved do
-      pending "Implement superscript and subscript"
+    it 'wraps between two fragments when the final fragment begins with a white space' do
       texts = [
-        { text: 'Hello ' },
-        { text: 'World' },
-        { text: ' 2', styles: [:superscript] }
+        { text: 'Hello ', font: font },
+        { text: 'World', font: font },
+        { text: ' 2', font: font }
       ]
       text_box = described_class.new(
         texts,
-        width: font.width_of('Hello World')
+        width: font.width_of('Hello World') + 1
       )
       text_box.render
       expect(text_box.text).to eq("Hello World\n2")
 
       texts = [
-        { text: 'Hello ' },
-        { text: 'World' },
-        { text: "\n2", styles: [:superscript] }
+        { text: 'Hello ', font: font },
+        { text: 'World', font: font },
+        { text: "\n2", font: font }
       ]
       text_box = described_class.new(
         texts,
-        width: font.width_of('Hello World')
+        width: font.width_of('Hello World') + 1
       )
       text_box.render
       expect(text_box.text).to eq("Hello World\n2")
