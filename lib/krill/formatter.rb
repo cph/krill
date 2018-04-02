@@ -22,18 +22,16 @@ module Krill
     # NOTE: +string+ must be UTF8-encoded.
     def compute_width_of(string, kerning: true)
       if kerning
-        kern(string).inject(0) do |s, r|
+        kern(string).inject(0.0) do |width, r|
           if r.is_a?(Numeric)
-            s - r
+            width - r
           else
-            r.inject(s) { |s2, u| s2 + font.character_widths.fetch(u, 0) }
+            r.inject(width) { |width2, char| width2 + font.character_widths.fetch(char, 0.0) }
           end
-        end * size
+        end
       else
-        string.chars.inject(0) do |sum, char|
-          sum + font.character_widths.fetch(char, 0.0)
-        end * size
-      end
+        string.chars.inject(0.0) { |width, char| width + font.character_widths.fetch(char, 0.0) }
+      end * size
     end
 
 
