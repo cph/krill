@@ -35,7 +35,6 @@ module Krill
       while fragment = @arranger.next_string
         @fragment_output = ""
 
-        fragment.lstrip! if first_fragment_on_this_line?(fragment)
         next if empty_line?(fragment)
 
         break unless apply_font_settings_and_add_fragment_to_line(fragment)
@@ -219,7 +218,7 @@ module Krill
     end
 
     def update_output_based_on_last_fragment(fragment, normalized_soft_hyphen = nil)
-      remaining_text = fragment.slice(@fragment_output.length..fragment.length)
+      remaining_text = fragment.slice(@fragment_output.length..fragment.length).lstrip
       fail CannotFit if line_finished? && line_empty? && @fragment_output.empty? && !fragment.strip.empty?
       @arranger.update_last_string(@fragment_output, remaining_text, normalized_soft_hyphen)
     end

@@ -22,18 +22,16 @@ module Krill
     # NOTE: +string+ must be UTF8-encoded.
     def compute_width_of(string, kerning: true)
       if kerning
-        kern(string).inject(0) do |s, r|
+        kern(string).inject(0.0) do |width, r|
           if r.is_a?(Numeric)
-            s - r
+            width - r
           else
-            r.inject(s) { |s2, u| s2 + font.character_widths.fetch(u, 0) }
+            r.inject(width) { |width2, char| width2 + width_of_char(char) }
           end
-        end * size
+        end
       else
-        string.chars.inject(0) do |sum, char|
-          sum + font.character_widths.fetch(char, 0.0)
-        end * size
-      end
+        string.chars.inject(0.0) { |width, char| width + width_of_char(char) }
+      end * size
     end
 
 
@@ -74,6 +72,7 @@ module Krill
 
   private
 
+
     def normalized_height
       @normalized_height ||= font.ascender - font.descender + font.line_gap
     end
@@ -94,7 +93,7 @@ module Krill
       string.each_char do |char|
         if a.empty?
           a << [char]
-        elsif (kern = font.kernings["#{a.last.last}#{char}"])
+        elsif (kern = kerning_for_chars(a.last.last, char))
           a << -kern << [char]
         else
           a.last << char
@@ -103,6 +102,19 @@ module Krill
 
       a
     end
+
+
+  protected
+
+
+    def width_of_char(char)
+      font.character_widths.fetch(char, 0.0)
+    end
+
+    def kerning_for_chars(char0, char1)
+      font.kernings["#{char0}#{char1}"]
+    end
+
 
   end
 end

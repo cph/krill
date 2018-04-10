@@ -4,12 +4,11 @@ describe Krill::TextBox do
   let(:font) { Krill.formatter }
 
   describe 'wrapping' do
-    it 'does not wrap between two fragments', :unresolved do
-      pending "Implement superscript and subscript"
+    it 'does not wrap between two fragments' do
       texts = [
-        { text: 'Hello ' },
-        { text: 'World' },
-        { text: '2', styles: [:superscript] }
+        { text: 'Hello ', font: font },
+        { text: 'World', font: font },
+        { text: '2', font: font }
       ]
       text_box = described_class.new(texts, width: font.width_of('Hello World'))
       text_box.render
@@ -27,55 +26,53 @@ describe Krill::TextBox do
       text_box.render
     end
 
-    it 'wraps between two fragments when the preceding fragment ends with a white space', :unresolved do
-      pending "Implement superscript and subscript"
+    it 'wraps between two fragments when the preceding fragment ends with a white space' do
       texts = [
-        { text: 'Hello ' },
-        { text: 'World ' },
-        { text: '2', styles: [:superscript] }
+        { text: 'Hello ', font: font },
+        { text: 'World ', font: font },
+        { text: '2', font: font }
       ]
       text_box = described_class.new(
         texts,
-        width: font.width_of('Hello World')
+        width: font.width_of('Hello World') + 1
       )
       text_box.render
       expect(text_box.text).to eq("Hello World\n2")
 
       texts = [
-        { text: 'Hello ' },
-        { text: "World\n" },
-        { text: '2', styles: [:superscript] }
+        { text: 'Hello ', font: font },
+        { text: "World\n", font: font },
+        { text: '2', font: font }
       ]
       text_box = described_class.new(
         texts,
-        width: font.width_of('Hello World')
+        width: font.width_of('Hello World') + 1
       )
       text_box.render
       expect(text_box.text).to eq("Hello World\n2")
     end
 
-    it 'wraps between two fragments when the final fragment begins with a white space', :unresolved do
-      pending "Implement superscript and subscript"
+    it 'wraps between two fragments when the final fragment begins with a white space' do
       texts = [
-        { text: 'Hello ' },
-        { text: 'World' },
-        { text: ' 2', styles: [:superscript] }
+        { text: 'Hello ', font: font },
+        { text: 'World', font: font },
+        { text: ' 2', font: font }
       ]
       text_box = described_class.new(
         texts,
-        width: font.width_of('Hello World')
+        width: font.width_of('Hello World') + 1
       )
       text_box.render
       expect(text_box.text).to eq("Hello World\n2")
 
       texts = [
-        { text: 'Hello ' },
-        { text: 'World' },
-        { text: "\n2", styles: [:superscript] }
+        { text: 'Hello ', font: font },
+        { text: 'World', font: font },
+        { text: "\n2", font: font }
       ]
       text_box = described_class.new(
         texts,
-        width: font.width_of('Hello World')
+        width: font.width_of('Hello World') + 1
       )
       text_box.render
       expect(text_box.text).to eq("Hello World\n2")
@@ -107,28 +104,25 @@ describe Krill::TextBox do
       expect(text_box.text).to eq("hello\nworld")
     end
 
-    it 'omits spaces from the beginning of the line' do
+    it 'omits spaces from the beginning of the wrapped line' do
+      array = [{ text: "hello  world", font: font }]
+      text_box = described_class.new(array, width: font.width_of("world"))
+      text_box.render
+      expect(text_box.text).to eq("hello\nworld")
+    end
+
+    it 'does not omit spaces from the beginning of paragraphs' do
       array = [{ text: " hello\n world", font: font }]
       text_box = described_class.new(array, width: 612.0)
       text_box.render
-      expect(text_box.text).to eq("hello\nworld")
+      expect(text_box.text).to eq(" hello\n world")
     end
 
     it 'is okay printing a line of whitespace' do
       array = [{ text: "hello\n    \nworld", font: font }]
       text_box = described_class.new(array, width: 612.0)
       text_box.render
-      expect(text_box.text).to eq("hello\n\nworld")
-
-      array = [
-        { text: 'hello' + ' ' * 500, font: font },
-        { text: ' ' * 500, font: font },
-        { text: ' ' * 500 + "\n", font: font },
-        { text: 'world', font: font }
-      ]
-      text_box = described_class.new(array, width: 612.0)
-      text_box.render
-      expect(text_box.text).to eq("hello\n\nworld")
+      expect(text_box.text).to eq("hello\n    \nworld")
     end
 
     it 'enables fragment level direction setting', :unresolved do

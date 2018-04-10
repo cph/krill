@@ -10,7 +10,11 @@ module Krill
     end
 
     def lines
-      @text_box.instance_variable_get :@printed_lines
+      @text_box.printed_lines.map(&:to_s)
+    end
+
+    def width
+      @text_box.printed_lines.map(&:width).max
     end
 
   end
