@@ -1,8 +1,10 @@
 module Krill
-  Formatter = Struct.new(:font, :size, :character_spacing) do
+  SUPERSCRIPT_SCALE = 0.583 # Measurement taken from Prawn's superscript implementation
 
-    def initialize(font, size, character_spacing: 0)
-      super font, size, character_spacing
+  Formatter = Struct.new(:font, :size, :character_spacing, :superscript, :subscript) do
+
+    def initialize(font, size, character_spacing: 0, superscript: false, subscript: false)
+      super font, size, character_spacing, superscript, subscript
     end
 
     def name
@@ -21,6 +23,7 @@ module Krill
 
     # NOTE: +string+ must be UTF8-encoded.
     def compute_width_of(string, kerning: true)
+      size_adjustment = superscript? || subscript? ? SUPERSCRIPT_SCALE : 1
       if kerning
         kern(string).inject(0.0) do |width, r|
           if r.is_a?(Numeric)
@@ -31,7 +34,7 @@ module Krill
         end
       else
         string.chars.inject(0.0) { |width, char| width + width_of_char(char) }
-      end * size
+      end * size * size_adjustment
     end
 
 
@@ -52,13 +55,8 @@ module Krill
     end
 
 
-    def superscript?
-      false # <-- TODO
-    end
-
-    def subscript?
-      false # <-- TODO
-    end
+    alias_method :superscript?, :superscript
+    alias_method :subscript?, :subscript
 
 
     def unicode?

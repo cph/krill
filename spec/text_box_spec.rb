@@ -161,34 +161,26 @@ describe Krill::TextBox do
       expect(contents.strings[2]).to eq(' text')
     end
 
-    it 'is able to set subscript', :unresolved do
-      pending "Implement superscript and subscript"
+    it 'is able to set subscript' do
       array = [
-        { text: 'this contains ' },
-        { text: 'subscript', size: 18, styles: [:subscript] },
-        { text: ' text' }
+        { text: 'this contains ', font: font },
+        { text: 'subscript', font: Krill.formatter(subscript: true) },
+        { text: ' text', font: font }
       ]
       text_box = described_class.new(array, width: 612.0)
       text_box.render
-      contents = PDF::Inspector::Text.analyze(pdf.render)
-      expect(contents.font_settings[0][:size]).to eq(12)
-      expect(contents.font_settings[1][:size])
-        .to be_within(0.0001).of(18 * 0.583)
+      expect(text_box.printed_lines.first.width).to be_within(0.0001).of(120.44794)
     end
 
-    it 'is able to set superscript', :unresolved do
-      pending "Implement superscript and subscript"
+    it 'is able to set superscript' do
       array = [
-        { text: 'this contains ' },
-        { text: 'superscript', size: 18, styles: [:superscript] },
-        { text: ' text' }
+        { text: 'this contains ', font: font },
+        { text: 'superscript', font: Krill.formatter(superscript: true) },
+        { text: ' text', font: font }
       ]
       text_box = described_class.new(array, width: 612.0)
       text_box.render
-      contents = PDF::Inspector::Text.analyze(pdf.render)
-      expect(contents.font_settings[0][:size]).to eq(12)
-      expect(contents.font_settings[1][:size])
-        .to be_within(0.0001).of(18 * 0.583)
+      expect(text_box.printed_lines.first.width).to be_within(0.0001).of(126.6674)
     end
 
     it 'is able to set font size', :unresolved do

@@ -31,8 +31,8 @@ module Krill
     end
   end
 
-  def self.formatter(name="Helvetica.afm", size: 12, character_spacing: 0)
-    Krill::Formatter.new(font(name), size, character_spacing: character_spacing)
+  def self.formatter(name="Helvetica.afm", size: 12, character_spacing: 0, superscript: false, subscript: false)
+    Krill::Formatter.new(font(name), size, character_spacing: character_spacing, superscript: superscript, subscript: subscript)
   end
 
   DATADIR = Pathname.new(File.dirname(__FILE__)).join("data")

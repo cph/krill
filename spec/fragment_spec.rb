@@ -132,11 +132,9 @@ describe Krill::Fragment do
   end
 
   describe 'subscript' do
-    before do
-      pending "Implement superscript and subscript"
-    end
-
     let(:fragment) do
+      font = Krill::formatter("DejaVuSans.ttf", subscript: true)
+      format_state = { font: font }
       described_class.new('hello world', format_state).tap do |fragment|
         fragment.line_height = 27
         fragment.descender = 7
@@ -145,24 +143,22 @@ describe Krill::Fragment do
     end
 
     describe '#subscript?' do
-      it 'be_trues', :unresolved do
+      it 'be_trues' do
         expect(fragment).to be_subscript
       end
     end
 
     describe '#y_offset' do
-      it 'returns a negative value', :unresolved do
+      it 'returns a negative value' do
         expect(fragment.y_offset).to be < 0
       end
     end
   end
 
   describe 'superscript' do
-    before do
-      pending "Implement superscript and subscript"
-    end
-
     let(:fragment) do
+      font = Krill::formatter("DejaVuSans.ttf", superscript: true)
+      format_state = { font: font }
       described_class.new('hello world', format_state).tap do |fragment|
         fragment.line_height = 27
         fragment.descender = 7
@@ -171,13 +167,13 @@ describe Krill::Fragment do
     end
 
     describe '#superscript?' do
-      it 'be_trues', :unresolved do
+      it 'be_trues' do
         expect(fragment).to be_superscript
       end
     end
 
     describe '#y_offset' do
-      it 'returns a positive value', :unresolved do
+      it 'returns a positive value' do
         expect(fragment.y_offset).to be > 0
       end
     end
